@@ -2,9 +2,9 @@
 	"companyName": "GoodMedia",
 	"productName": "HappyWheels",
 	"productVersion": "0.1",
-	"dataUrl": "./BuildData/HappyWheels.data.unityweb",
-	"wasmCodeUrl": "./BuildData/HappyWheels.wasm.code.unityweb",
-	"wasmFrameworkUrl": "./BuildData/HappyWheels.wasm.framework.unityweb",
+	"dataUrl": "./HappyWheels.data.unityweb",
+	"wasmCodeUrl": "./HappyWheels.wasm.code.unityweb",
+	"wasmFrameworkUrl": "./HappyWheels.wasm.framework.unityweb",
 	"graphicsAPI": [
 		"WebGL 2.0",
 		"WebGL 1.0"
