@@ -2,9 +2,9 @@
 	"companyName": "Trickshot Labs",
 	"productName": "Grey-Box Testing",
 	"productVersion": "0.1.5",
-	"dataUrl": "/BuildData/v0_1_5.data.unityweb",
-	"wasmCodeUrl": "/BuildData/v0_1_5.wasm.code.unityweb",
-	"wasmFrameworkUrl": "/BuildData/v0_1_5.wasm.framework.unityweb",
+	"dataUrl": "./v0_1_5.data.unityweb",
+	"wasmCodeUrl": "./v0_1_5.wasm.code.unityweb",
+	"wasmFrameworkUrl": "./v0_1_5.wasm.framework.unityweb",
 	"graphicsAPI": [
 		"WebGL 2.0",
 		"WebGL 1.0"
