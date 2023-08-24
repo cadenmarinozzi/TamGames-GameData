@@ -1,0 +1,23 @@
+{
+    "companyName": "JustPlay.LOL",
+    "productName": "JustFall.LOL",
+    "productVersion": "1.0",
+    "dataUrl": "/Build/WebGLRC.data.unityweb",
+    "wasmCodeUrl": "/Build/WebGLRC.wasm.code.unityweb",
+    "wasmFrameworkUrl": "/Build/WebGLRC.wasm.framework.unityweb",
+    "graphicsAPI": [
+        "WebGL 2.0",
+        "WebGL 1.0"
+    ],
+    "webglContextAttributes": {
+        "preserveDrawingBuffer": false
+    },
+    "splashScreenStyle": "Dark",
+    "backgroundColor": "#000000",
+    "cacheControl": {
+        "default": "must-revalidate"
+    },
+    "developmentBuild": false,
+    "multithreading": false,
+    "unityVersion": "2019.4.16f1"
+}
