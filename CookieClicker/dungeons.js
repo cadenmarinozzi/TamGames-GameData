@@ -14,7 +14,7 @@ var LaunchDungeons=function()
 		if (type=='magical') return choose(['arcane','magical','mystical','sacred','honed','banished','unholy','holy','demonic','enchanted','necromantic','bewitched','haunted','occult','astral']);
 		return '';
 	}
-
+	
 	/*=====================================================================================
 	DUNGEONS
 	=======================================================================================*/
@@ -27,7 +27,7 @@ var LaunchDungeons=function()
 		Game.DungeonTypes[this.name]=this;
 		return this;
 	};
-
+	
 	/*=====================================================================================
 	CREATE DUNGEON TYPES
 	=======================================================================================*/
@@ -37,33 +37,33 @@ var LaunchDungeons=function()
 		str+=Game.GetWord(choose(['secret','ruined','magical']))+' '+choose(['factory','factories','bakery','bakeries','confectionery','laboratory','research center','chocolate forge','chocolate foundry','manufactory','warehouse','machinery','works','bakeworks','workshop','assembly line']);
 		return str;
 	};
-
+	
 	new Game.DungeonType('Mine').
 	nameGenerator=function(){
 		var str='';
 		str+=Game.GetWord(choose(['secret','ruined','magical']))+' '+choose(['chocolate','chocolate','chocolate','white chocolate','sugar','cacao'])+' '+choose(['mine','mines','pit','pits','quarry','excavation','tunnel','shaft','lode','trench','mountain','vein','cliff','peak','dome','crater','abyss','chasm','hole','burrow']);
 		return str;
 	};
-
+	
 	new Game.DungeonType('Portal').
 	nameGenerator=function(){
 		var str='';
 		str+=Game.GetWord(choose(['secret','ruined','magical']))+' '+choose(['portal','gate','dimension','warpgate','door']);
 		return str;
 	};
-
+	
 	new Game.DungeonType('Secret zebra level').
 	nameGenerator=function(){
 		var str='';
 		str+=Game.GetWord(choose(['secret']))+' '+choose(['zebra level']);
 		return str;
 	};
-
-
+	
+	
 	/*=====================================================================================
 	CREATE TILE TYPES
 	=======================================================================================*/
-
+	
 	var D=new DungeonGen();
 	D.loadTiles([
 	['wall',[1,0],'join'],
@@ -95,12 +95,12 @@ var LaunchDungeons=function()
 	['exit',[0,2]],
 	['alt exit',[0,4]]
 	]);
-
-
+	
+	
 	/*=====================================================================================
 	CREATE MONSTER TYPES
 	=======================================================================================*/
-
+	
 	/*
 	An explanation of stats :
 		-hp : health points
@@ -135,7 +135,7 @@ var LaunchDungeons=function()
 	var bossLoot={gear:{prob:1}};
 	var chestLoot={cookies:{min:2,max:20,prob:1},gear:{prob:0.1}};
 	var bossLoot={cookies:{min:10,max:50,prob:1},gear:{prob:0.2}};
-
+	
 	//general monsters
 	new Game.Monster('Doughling','doughling',[0,0],1,{hp:5,might:2,guard:2,speed:6,dodge:6,rarity:0.7},basicLoot);
 	new Game.Monster('Elder doughling','elderDoughling',[1,0],7,{hp:20,might:7,guard:7,speed:4,dodge:4,rarity:0.7},goodLoot);
@@ -145,7 +145,7 @@ var LaunchDungeons=function()
 	new Game.Monster('Raw sentient cookie','rawSentientCookie',[5,0],5,{hp:16,might:6,guard:4,speed:7,dodge:7,rarity:0.2},basicLoot);
 	new Game.Monster('Sugar bunny','sugarBunny',[8,0],5,{hp:10,might:3,guard:8,speed:12,dodge:9,rarity:0.001},{cookies:{min:1000,max:10000}});
 	Game.Monsters['Sugar bunny'].onKill=function(){Game.Win('Follow the white rabbit');};Game.Monsters['Sugar bunny'].AI='flee';
-
+	
 	//factory monsters
 	new Game.Monster('Crazed kneader','crazedKneader',[0,2],6,{hp:18,might:6,guard:8,speed:3,dodge:2,rarity:0.5},goodLoot);
 	new Game.Monster('Crazed chip-spurter','crazedDoughSpurter',[0,2],6,{hp:15,might:6,guard:8,speed:5,dodge:3,rarity:0.5},goodLoot);
@@ -155,23 +155,23 @@ var LaunchDungeons=function()
 	new Game.Monster('Disgruntled worker','disgruntledWorker',[1,2],4,{hp:14,might:5,guard:5,speed:6,dodge:4,rarity:0.6},basicLoot);
 	new Game.Monster('Disgruntled overseer','disgruntledOverseer',[1,2],7,{hp:22,might:7,guard:5,speed:6,dodge:4,rarity:0.5},basicLoot);
 	new Game.Monster('Disgruntled cleaning lady','disgruntledCleaningLady',[2,2],4,{hp:13,might:4,guard:5,speed:7,dodge:6,rarity:0.3},basicLoot);
-
+	
 	new Game.Monster('Sentient Furnace','sentientFurnace',[0,3],0,{hp:60,might:14,guard:12,speed:4,dodge:0,rarity:1},bossLoot);//boss
 	Game.Monsters['Sentient Furnace'].onKill=function(){Game.Win('Getting even with the oven');};Game.Monsters['Sentient Furnace'].AI='static';Game.Monsters['Sentient Furnace'].boss=1;Game.Monsters['Sentient Furnace'].quotes={fight:'YOU ARE NOT READY!',defeat:'OH... BURN.'};
 	new Game.Monster('Ascended Baking Pod','ascendedBakingPod',[1,3],0,{hp:60,might:12,guard:14,speed:4,dodge:0,rarity:0.7},bossLoot);//boss
 	Game.Monsters['Ascended Baking Pod'].onKill=function(){Game.Win('Now this is pod-smashing');};Game.Monsters['Ascended Baking Pod'].AI='static';Game.Monsters['Ascended Baking Pod'].boss=1;Game.Monsters['Ascended Baking Pod'].quotes={fight:'rrrrrrrise.',defeat:'blrglblg.'};
-
-
+	
+	
 	Game.BossMonsters=[];
 	for (var i in Game.Monsters)
 	{
 		if (Game.Monsters[i].boss) Game.BossMonsters.push(Game.Monsters[i]);
 	}
-
+	
 	/*=====================================================================================
 	ENTITY MECHANICS
 	=======================================================================================*/
-
+	
 	Game.Entity=function(type,subtype,dungeon,pic,stats)//objects you could find on the map : doors, mobs, interactables, items, player, exits...
 	{
 		this.type=type;
@@ -181,7 +181,7 @@ var LaunchDungeons=function()
 		this.stats={};
 		for (var i in stats)
 		{this.stats[i]=stats[i];}
-
+		
 		this.x=-1;
 		this.y=-1;
 		this.obstacle=0;
@@ -208,7 +208,7 @@ var LaunchDungeons=function()
 			this.zIndex=100;
 			this.fighting=0;
 			for (var i in Game.Heroes[this.subtype].stats){this.stats[i]=Game.Heroes[this.subtype].stats[i];}
-
+			
 			//increase stats by amount of matching building (change that later to use gear instead)
 			var mult=Math.max(0,(Game.Objects[this.dungeon.type].amount/20-1));
 			this.stats.hpm+=Math.ceil(mult*2);
@@ -230,7 +230,7 @@ var LaunchDungeons=function()
 			this.zIndex=15;
 			if (this.subtype=='door') this.pic=[0,7];
 			else this.pic=[Math.floor(Math.random()*4+2),7];
-
+			
 			this.onKill=function()
 			{
 				if (this.subtype=='random')
@@ -250,7 +250,7 @@ var LaunchDungeons=function()
 			this.value='';
 			this.obstacle=1;
 		}
-
+		
 		this.Say=function(what)
 		{
 			if (this.type=='monster')
@@ -376,11 +376,11 @@ var LaunchDungeons=function()
 			else if ((this.type=='monster' && by.type=='hero') || (this.type=='hero' && by.type=='monster') && this.stats.hp>0)//it's a fight!
 			{
 				by.stuck=0;
-
+				
 				var monster=(this.type=='hero'?by:this);
 				var hero=(this.type=='hero'?this:by);
 				this.dungeon.currentOpponent=monster;
-
+				
 				if (monster.fighting==0)//first meeting
 				{
 					Game.Heroes[hero.subtype].Say('meet '+Game.Monsters[monster.subtype].name);
@@ -391,7 +391,7 @@ var LaunchDungeons=function()
 					this.fighting=1;
 					by.fighting=1;
 				}
-
+				
 				var attackStr='';
 				var attackerName='';
 				var defenderName='';
@@ -399,7 +399,7 @@ var LaunchDungeons=function()
 				else if (by.type=='monster') attackerName=Game.Monsters[by.subtype].name;
 				if (this.type=='hero') defenderName=Game.Heroes[this.subtype].name;
 				else if (this.type=='monster') defenderName=Game.Monsters[this.subtype].name;
-
+				
 				//battle formulas (have fun with these)
 				attackStr+=attackerName+' swings at '+defenderName+'!';
 				var damage=Math.round(Math.max(1,Math.min(by.stats.might,Math.pow(((by.stats.might+2.5)/Math.max(1,this.stats.guard)),2)))*(0.8+Math.random()*0.4+Math.pow(Math.random()*0.8,6)));
@@ -412,7 +412,7 @@ var LaunchDungeons=function()
 				{
 					if (by.stats.luck && by.type=='hero' && Math.random()<by.stats.luck*0.01) {damage*=2;attackStr+=' <b>It\'s a critical!</b>';}//very rare critical based on luck
 					attackStr+=' <b>'+damage+'</b> damage!';
-
+					
 					this.stats.hp-=damage;
 					this.stats.hp=Math.max(this.stats.hp,0);
 					if (this.stats.luck && this.type=='hero')
@@ -420,10 +420,10 @@ var LaunchDungeons=function()
 						if (this.stats.hp==0 && Math.random()<this.stats.luck*0.01) {this.stats.hp=1;attackStr+=' '+defenderName+' was saved from certain death!';}//very rare life-saving based on luck
 					}
 				}
-
+				
 				if (this.type=='hero') attackStr='<span style="color:#f99;">'+attackStr+'</span>';
 				if (attackStr!='') this.dungeon.Log(attackStr);
-
+				
 				if (this.stats.hp<=0)//die
 				{
 					this.dungeon.Log(attackerName+' crushed '+defenderName+'!');
@@ -511,11 +511,11 @@ var LaunchDungeons=function()
 			return randomFloor((this.stats.speed/5)*(1/Math.max(1,(this.dungeon.heroEntity.stats.speed/5))));
 		}
 	}
-
+	
 	/*=====================================================================================
 	DUNGEON MECHANICS
 	=======================================================================================*/
-
+	
 	Game.Dungeons=[];
 	Game.Dungeon=function(type,id)
 	{
@@ -530,10 +530,10 @@ var LaunchDungeons=function()
 		this.level=0;
 		this.auto=1;
 		this.portalPic='';
-
+		
 		this.cookiesMadeThisRun=0;
 		this.monstersKilledThisRun=0;
-
+		
 		this.Log=function(what,nested)
 		{
 			if (typeof what==='string')
@@ -544,7 +544,7 @@ var LaunchDungeons=function()
 			else {for (var i in what) {this.Log(what[i],1);}}
 			//if (!nested) this.UpdateLog();
 		}
-
+		
 		this.UpdateLog=function()
 		{
 			this.log=this.log.slice(0,30);
@@ -557,7 +557,7 @@ var LaunchDungeons=function()
 			this.logNew=0;
 			l('dungeonLog'+this.id).innerHTML=str;
 		}
-
+		
 		this.entities=[];
 		this.GetEntities=function(x,y)//returns the first entity found on tile x,y
 		{
@@ -589,7 +589,7 @@ var LaunchDungeons=function()
 			for (var i in this.entities) {str+=this.entities[i].Draw();}
 			return str;
 		}
-
+		
 		this.CheckObstacle=function(x,y)//returns 0 for no obstacle; -1 for a wall; an entity if there's at least one entity on this tile
 		{
 			if (x<0 || x>=this.map.w || y<0 || y>=this.map.h) return -1;
@@ -600,8 +600,8 @@ var LaunchDungeons=function()
 			}
 			return this.map.isObstacle(x,y)?-1:0;
 		}
-
-
+		
+		
 		this.map={};
 		this.Generate=function()
 		{
@@ -642,7 +642,7 @@ var LaunchDungeons=function()
 					}
 				}
 			}*/
-
+			
 			for (var i in M.doors)//place door entities on door positions
 			{
 				//M.data[M.doors[i][0]][M.doors[i][1]][0]=TILE_FLOOR_EDGE;
@@ -670,7 +670,7 @@ var LaunchDungeons=function()
 			}
 			this.map=M;
 			this.map.str=this.map.getStr();
-
+			
 			//place a boss
 			var tile=this.map.exit;
 			var monsters=[];
@@ -685,7 +685,7 @@ var LaunchDungeons=function()
 				this.AddEntity('monster',choose(monsters),tile[0],tile[1]);
 				this.map.removeFreeTile(tile[0],tile[1]);
 			}
-
+			
 			//place relics
 			/*
 			var tile=this.map.getBestSpotInRoom(this.map.getRoom(this.map.exit[0],this.map.exit[1]));
@@ -703,7 +703,7 @@ var LaunchDungeons=function()
 					this.map.removeFreeTile(tile.x,tile.y);
 				}
 			}*/
-
+			
 			//sprinkle monsters and treasure
 			for (var i=0;i<Math.ceil(this.map.freeTiles.length*0.7);i++)//let's fill this up with A LOT of stuff
 			{
@@ -743,9 +743,9 @@ var LaunchDungeons=function()
 				}
 			}
 		}
-
+		
 		this.onTile=-1;
-
+		
 		this.Draw=function()
 		{
 			var str='';
@@ -766,7 +766,7 @@ var LaunchDungeons=function()
 			'</div>'+
 			'<div id="dungeonLog'+this.id+'" class="dungeonLog"></div>';
 			l('rowSpecial'+this.id).innerHTML='<div style="width:100%;height:100%;z-index:10000;position:absolute;left:0px;top:0px;">'+str+'</div>';
-
+			
 			l('picHero'+this.id).style.backgroundImage='url(img/'+this.hero.portrait+'.png)';
 			l('nameHero'+this.id).innerHTML=this.hero.name;
 		}
@@ -806,16 +806,16 @@ var LaunchDungeons=function()
 			}
 			this.currentOpponent=0;
 			l('hpHero'+this.id).style.width=Math.round((this.heroEntity.stats.hp/this.heroEntity.stats.hpm)*100)+'%';
-
+				
 			this.Refresh();
 			this.UpdateLog();
-
+			
 			if (this.hero.x==this.map.exit[0] && this.hero.y==this.map.exit[1])
 			{
 				this.CompleteLevel();
 			}
 		}
-
+		
 		this.DrawButton=function()
 		{
 			var str='';
@@ -823,7 +823,7 @@ var LaunchDungeons=function()
 			str+='<div style="width:144px;height:144px;position:absolute;left:0px;bottom:0px;"><a class="specialButtonPic" style="background-image:url(img/'+this.portalPic+'.png);" onclick="Game.ObjectsById['+this.id+'].setSpecial(1);"><div class="specialButtonText">Enter dungeons</div></a></div>';
 			return str;
 		}
-
+		
 		this.CompleteLevel=function()
 		{
 			this.hero.Say('completion');
@@ -843,7 +843,7 @@ var LaunchDungeons=function()
 			this.Draw();
 		}
 	}
-
+	
 	Game.DungeonLocationChain=function(map,x,y)//return an array of the rooms between the root room and this tile's room, inclusive
 	{//we shouldn't need all this if we used A*...
 		var room=map.getRoom(x,y);
@@ -878,7 +878,7 @@ var LaunchDungeons=function()
 		if (start.length>1) return start[1];//different or superior branch, go to the superior room
 		return start[0];//eeeh, let's just stay in the same room
 	}
-
+	
 	/*=====================================================================================
 	CREATE DUNGEONS
 	=======================================================================================*/
@@ -891,7 +891,7 @@ var LaunchDungeons=function()
 		this.dungeon.timer=0;
 		this.dungeon.timerWarmup=5;
 		this.dungeon.portalPic='dungeonFactory';
-
+		
 		this.EachFrame=function()
 		{
 			if (this.dungeon.auto)
@@ -901,10 +901,10 @@ var LaunchDungeons=function()
 				{
 					this.dungeon.timer=Game.fps*(Math.max(0.1,2-(this.dungeon.hero.stats.speed*0.2))+Math.max(this.dungeon.timerWarmup,0));
 					if (this.dungeon.timerWarmup>0) this.dungeon.timerWarmup--;
-
+					
 					var dungeon=this.dungeon;
 					var hero=dungeon.heroEntity;
-
+					
 					var targetRoom=Game.DungeonLinkLocationChains(Game.DungeonLocationChain(dungeon.map,hero.x,hero.y),Game.DungeonLocationChain(dungeon.map,dungeon.map.exit[0],dungeon.map.exit[1]));
 					var targetTile=(targetRoom.gen==0 || targetRoom.id==dungeon.map.getRoom(hero.x,hero.y).id)?[dungeon.map.exit[0],dungeon.map.exit[1]]:targetRoom.door;
 					hero.GoTo(targetTile[0],targetTile[1]);
@@ -915,7 +915,7 @@ var LaunchDungeons=function()
 				}
 			}
 		}
-
+		
 		if (document.addEventListener)//clean this up later
 		{
 			l('rowSpecial'+this.dungeon.id).removeEventListener('keydown',arguments.callee,false);
@@ -943,7 +943,7 @@ var LaunchDungeons=function()
 					}
 					event.preventDefault();
 				}
-
+				
 				if (control)
 				{
 					event.preventDefault();
@@ -953,11 +953,11 @@ var LaunchDungeons=function()
 			}
 			);
 		}
-
+		
 		var hero=choose(Game.HeroesById);
 		hero.EnterDungeon(this.dungeon,this.dungeon.map.entrance[0],this.dungeon.map.entrance[1]);
 	}
-
+	
 	/*=====================================================================================
 	HEROES
 	=======================================================================================*/
@@ -990,10 +990,10 @@ var LaunchDungeons=function()
 		};
 		this.inDungeon=-1;
 		this.completedDungeons=0;
-
+		
 		this.x=0;
 		this.y=0;
-
+		
 		this.EnterDungeon=function(dungeon,x,y)
 		{
 			this.inDungeon=dungeon.id;
@@ -1020,12 +1020,12 @@ var LaunchDungeons=function()
 				dungeon.Turn();
 			}
 		}
-
+		
 		this.Say=function(what)
 		{
 			if (this.dialogue[what]) Game.Dungeons[this.inDungeon].Log(this.name+' : "<span style="color:#99f;">'+choose(this.dialogue[what].split('|'))+'</span>"');
 		}
-
+		
 		this.save=function()
 		{
 			var str='';
@@ -1049,7 +1049,7 @@ var LaunchDungeons=function()
 		Game.HeroesById.push(this);
 		Game.Heroes[this.name]=this;
 	}
-
+	
 	/*=====================================================================================
 	CREATE HEROES
 	=======================================================================================*/
@@ -1132,5 +1132,5 @@ var LaunchDungeons=function()
 		dodge:5,
 		luck:7
 	};
-
+	
 };

@@ -40,7 +40,7 @@ var DungeonGen=function()
 	var TILE_WALL_CORNER=510;
 	var TILE_ENTRANCE=250;
 	var TILE_EXIT=260;
-
+	
 	var colors=[];
 	colors[TILE_EMPTY]='000';
 	colors[TILE_LIMIT]='900';
@@ -53,9 +53,9 @@ var DungeonGen=function()
 	colors[TILE_WALL_CORNER]='630';
 	colors[TILE_ENTRANCE]='f9f';
 	colors[TILE_EXIT]='f9f';
-
+	
 	var rand=function(a,b){return Math.floor(Math.random()*(b-a+1)+a);}//return random value between a and b
-
+	
 	var Patterns=[];
 	this.Pattern=function(name,func)
 	{
@@ -84,11 +84,11 @@ var DungeonGen=function()
 		if (room.x%2==1) if ((y+room.y)%2==0 && Math.random()<0.98) return TILE_PILLAR;
 		return 0;
 	});
-
-
+	
+	
 	var getRandomPattern=function()
 	{return choose(Patterns);}
-
+	
 	var defaultGenerator=function(me)
 	{
 		me.roomSize=10;
@@ -99,7 +99,7 @@ var DungeonGen=function()
 		me.waterRatio=0;
 		me.branching=4;
 		me.sizeVariance=0.2;
-
+	
 		me.fillRatio=0.1+Math.random()*0.4;
 		me.roomSize=Math.ceil(rand(5,15)*me.fillRatio*2);
 		me.corridorSize=Math.ceil(rand(1,7)*me.fillRatio*2);
@@ -109,8 +109,8 @@ var DungeonGen=function()
 		me.branching=Math.floor(Math.random()*6);
 		me.sizeVariance=Math.random();
 	}
-
-
+	
+	
 	this.Map=function(w,h,seed,params)
 	{
 		//create a new map
@@ -122,9 +122,9 @@ var DungeonGen=function()
 		this.seedState=Math.random;
 		this.w=w||20;
 		this.h=h||20;
-
+		
 		this.roomsAreHidden=0;
-
+		
 		this.rooms=[];
 		this.freeWalls=[];//all walls that would be a good spot for a door
 		this.freeTiles=[];//all passable floor tiles
@@ -133,7 +133,7 @@ var DungeonGen=function()
 		this.tilesDug=0;
 		this.digs=0;//amount of digging steps
 		this.stuck=0;//how many times we ran into a problem; stop digging if we get too many of these
-
+		
 		this.data=[];//fill the map with 0
 		for (var x=0;x<this.w;x++)
 		{
@@ -144,7 +144,7 @@ var DungeonGen=function()
 				if (x==0 || y==0 || x==this.w-1 || y==this.h-1) this.data[x][y]=[TILE_LIMIT,-1,0];
 			}
 		}
-
+		
 		defaultGenerator(this);
 		if (params)
 		{
@@ -154,13 +154,13 @@ var DungeonGen=function()
 			}
 		}
 		Math.seedrandom();
-
+		
 	}
-
+	
 	this.Map.prototype.getType=function(x,y){return this.data[x][y][0];}
 	this.Map.prototype.getRoom=function(x,y){if (this.data[x][y][1]!=-1) return this.rooms[this.data[x][y][1]]; else return -1;}
 	this.Map.prototype.getTile=function(x,y){return this.rooms[this.data[x][y][2]];}
-
+	
 	this.Map.prototype.isWall=function(x,y)
 	{
 		var n=0;
@@ -177,7 +177,7 @@ var DungeonGen=function()
 	{
 		this.freeTiles.splice(this.isFloor(x,y),1);
 	}
-
+	
 	this.Map.prototype.fill=function(what)
 	{
 		//fill with something (either a set value, or a function that takes the map, a position X and a position Y as arguments)
@@ -191,7 +191,7 @@ var DungeonGen=function()
 		}}
 		this.rooms=[];
 	}
-
+	
 	this.Map.prototype.fillZone=function(X,Y,W,H,what)
 	{
 		//just plain fill a rectangle
@@ -199,21 +199,21 @@ var DungeonGen=function()
 			this.data[x][y][0]=what;
 		}}
 	}
-
+	
 	this.Map.prototype.getRoomTile=function(room,x,y)
 	{
 		var n=0;
 		for (var i in room.tiles) {if (room.tiles[i].x==x && room.tiles[i].y==y) return n; else n++;}
 		return -1;
 	}
-
+	
 	this.Map.prototype.getFloorTileInRoom=function(room)
 	{
 		var tiles=[];
 		for (var i in room.tiles) {if (room.tiles[i].type==TILE_FLOOR_EDGE || room.tiles[i].type==TILE_FLOOR_CENTER) tiles.push(room.tiles[i]);}
 		return choose(tiles);
 	}
-
+	
 	this.Map.prototype.canPlaceRoom=function(rx,ry,rw,rh)
 	{
 		if (rx<2 || ry<2 || rx+rw>=this.w-1 || ry+rh>=this.h-1) return false;
@@ -229,7 +229,7 @@ var DungeonGen=function()
 		}
 		return true;
 	}
-
+	
 	this.Map.prototype.setRoomTile=function(room,x,y,tile)
 	{
 		//var mapTile=this.getType(x,y);
@@ -250,7 +250,7 @@ var DungeonGen=function()
 			return true;
 		}
 	}
-
+	
 	this.Map.prototype.expandRoom=function(room,rx,ry,rw,rh)
 	{
 		var x=0;var y=0;
@@ -287,7 +287,7 @@ var DungeonGen=function()
 		this.setRoomTile(room,x,y,TILE_WALL_CORNER);
 		x=rx+rw;y=ry+rh;
 		this.setRoomTile(room,x,y,TILE_WALL_CORNER);
-
+		
 		//decoration
 		var water=Math.random()<this.waterRatio?1:0;
 		var pattern=Math.random()<this.pillarRatio?getRandomPattern():0;
@@ -304,7 +304,7 @@ var DungeonGen=function()
 			}
 		}}
 	}
-
+	
 	this.Map.prototype.newRoom=function(x,y,w,h,parent)
 	{
 		//create a new abstract room, ready to be carved
@@ -323,7 +323,7 @@ var DungeonGen=function()
 		room.corridor=Math.random()<this.corridorRatio?1:0;
 		room.hidden=this.roomsAreHidden;//if 1, don't draw
 		//if (room.parent!=-1) room.corridor=!room.parent.corridor;//alternate rooms and corridors
-
+		
 		return room;
 	}
 	this.Map.prototype.planRoom=function(room)
@@ -337,7 +337,7 @@ var DungeonGen=function()
 			if (w>0) {forcedExpansions.push(1,3);w--;}
 			if (h>0) {forcedExpansions.push(2,4);h--;}
 		}
-
+		
 		for (var i=0;i<branches;i++)
 		{
 			var steps=0;
@@ -374,8 +374,8 @@ var DungeonGen=function()
 			}
 		}
 	}
-
-
+	
+	
 	this.Map.prototype.carve=function(room)
 	{
 		//carve a room into the map
@@ -385,9 +385,9 @@ var DungeonGen=function()
 			var x=thisTile.x;var y=thisTile.y;
 			var myType=this.data[x][y][0];
 			var type=thisTile.type;
-
+			
 			if ((type==TILE_WALL || type==TILE_WALL_CORNER) && this.isWall(x,y)!=-1) {this.freeWalls.splice(this.isWall(x,y),1);}
-
+			
 			if (this.data[x][y][1]!=-1 && (type==TILE_WALL || type==TILE_WALL_CORNER)) {}
 			else
 			{
@@ -400,7 +400,7 @@ var DungeonGen=function()
 		}
 		this.rooms[room.id]=room;
 	}
-
+	
 	this.Map.prototype.newRandomRoom=function(params)
 	{
 		var success=1;
@@ -451,7 +451,7 @@ var DungeonGen=function()
 		if (success) return room;
 		else return 0;
 	}
-
+	
 	this.Map.prototype.getRandomSpotInRoom=function(room)
 	{
 		var listOfTiles=[];
@@ -502,15 +502,15 @@ var DungeonGen=function()
 		}
 		return deepestRoom;
 	}
-
+	
 	this.Map.prototype.dig=function()
 	{
 		//one step in which we try to carve new stuff
 		//returns 0 when we couldn't dig this step, 1 when we could, and 2 when the digging is complete
 		Math.random=this.seedState;
-
+		
 		var badDig=0;
-
+		
 		if (this.digs==0)//first dig : build a starting room in the middle of the map
 		{
 			var w=rand(3,7);
@@ -525,13 +525,13 @@ var DungeonGen=function()
 			if (this.newRandomRoom()==0) badDig++;
 		}
 		if (badDig>0) this.stuck++;
-
+		
 		this.digs++;
-
+		
 		var finished=0;
 		if (this.tilesDug>=this.tiles*this.fillRatio) finished=1;
 		if (this.stuck>100) finished=1;
-
+		
 		if (finished==1)//last touch : try to add a whole room at the end
 		{
 			for (var i=0;i<10;i++)
@@ -540,11 +540,11 @@ var DungeonGen=function()
 				if (newRoom!=0 && newRoom.freeTiles>15) break;
 			}
 		}
-
+		
 		Math.seedrandom();
 		if (finished==1) return 1; else if (badDig>0) return -1; else return 0;
 	}
-
+	
 	this.Map.prototype.finish=function()
 	{
 		//touch up the map : add pillars in corners etc
@@ -585,7 +585,7 @@ var DungeonGen=function()
 				var xy2=this.data[x+1][y-1][0];
 				var xy3=this.data[x-1][y+1][0];
 				var xy4=this.data[x+1][y+1][0];
-
+				
 				var walls=0;
 				if ((x1==TILE_WALL||x1==TILE_WALL_CORNER)) walls++;
 				if ((y1==TILE_WALL||y1==TILE_WALL_CORNER)) walls++;
@@ -595,7 +595,7 @@ var DungeonGen=function()
 				if ((xy2==TILE_WALL||xy2==TILE_WALL_CORNER)) walls++;
 				if ((xy3==TILE_WALL||xy3==TILE_WALL_CORNER)) walls++;
 				if ((xy4==TILE_WALL||xy4==TILE_WALL_CORNER)) walls++;
-
+				
 				var floors=0;
 				if ((x1==TILE_FLOOR_CENTER||x1==TILE_FLOOR_EDGE)) floors++;
 				if ((y1==TILE_FLOOR_CENTER||y1==TILE_FLOOR_EDGE)) floors++;
@@ -605,10 +605,10 @@ var DungeonGen=function()
 				if ((xy2==TILE_FLOOR_CENTER||xy2==TILE_FLOOR_EDGE)) floors++;
 				if ((xy3==TILE_FLOOR_CENTER||xy3==TILE_FLOOR_EDGE)) floors++;
 				if ((xy4==TILE_FLOOR_CENTER||xy4==TILE_FLOOR_EDGE)) floors++;
-
+				
 				var complete=0;
 				if (walls+floors==8) complete=1;
-
+				
 				var angle=0;
 				if (complete)
 				{
@@ -626,7 +626,7 @@ var DungeonGen=function()
 					else if ((xy3==TILE_FLOOR_CENTER||xy3==TILE_FLOOR_EDGE) && (y2==TILE_FLOOR_CENTER||y2==TILE_FLOOR_EDGE) && (xy4==TILE_FLOOR_CENTER||xy4==TILE_FLOOR_EDGE)) bottom=-1;
 					if ((top==1 && bottom==-1) || (top==-1 && bottom==1) || (left==1 && right==-1) || (left==-1 && right==1)) angle=1;
 				}
-
+				
 				if (pillars && Math.random()<0.8 && this.rooms[i].freeTiles>4)
 				{
 					if ((angle==1 || (complete && walls==7)) && me==TILE_FLOOR_EDGE && x1!=TILE_DOOR && x2!=TILE_DOOR && y1!=TILE_DOOR && y2!=TILE_DOOR)
@@ -637,7 +637,7 @@ var DungeonGen=function()
 						this.rooms[i].freeTiles--;
 					}
 				}
-
+				
 				//calculate score (for placing items and exits)
 				if (top==1 || bottom==1 || left==1 || right==1)
 				{
@@ -652,12 +652,12 @@ var DungeonGen=function()
 					this.rooms[i].tiles[ii].score+=5;
 				}
 				if ((me!=TILE_FLOOR_CENTER && me!=TILE_FLOOR_EDGE) || x1==TILE_DOOR || x2==TILE_DOOR || y1==TILE_DOOR || y2==TILE_DOOR) this.rooms[i].tiles[ii].score=-1;
-
+				
 			}
 		}
-
-
-
+		
+		
+		
 		//carve entrance and exit
 		var entrance=this.getBestSpotInRoom(this.getEarliestRoom());
 		this.data[entrance.x][entrance.y][0]=TILE_ENTRANCE;
@@ -669,7 +669,7 @@ var DungeonGen=function()
 		this.exit=[exit.x,exit.y];
 		this.removeFreeTile(exit.x,exit.y);
 		exit.score=0;
-
+		
 		/*
 		for (var i in this.doors)//remove door tiles (to add later; replace the tiles by entities that delete themselves when opened)
 		{
@@ -677,7 +677,7 @@ var DungeonGen=function()
 		}
 		*/
 	}
-
+	
 	this.Map.prototype.isObstacle=function(x,y)
 	{
 		var free=[TILE_FLOOR_EDGE,TILE_FLOOR_CENTER,TILE_DOOR,TILE_ENTRANCE,TILE_EXIT];
@@ -687,7 +687,7 @@ var DungeonGen=function()
 		}
 		return 1;
 	}
-
+	
 	var joinTile=function(map,x,y,joinWith)
 	{
 		//for the tile at x,y, return 2 if it joins with its horizontal neighbors, 3 if it joins with its vertical neighbors, 1 if it joins with either both or neither.
@@ -742,7 +742,7 @@ var DungeonGen=function()
 		}
 		return [0,0];
 	}
-
+	
 	var Tiles=[];
 	var TilesByName=[];
 	this.Tile=function(name,pic,joinType)
@@ -765,7 +765,7 @@ var DungeonGen=function()
 			new this.Tile(name,pic,joinType);
 		}
 	}
-
+	
 	var computeTile=function(tile,tiles,value,name)
 	{
 		if (tile==value && tiles[name]) return TilesByName[tiles[name]];
@@ -788,12 +788,12 @@ var DungeonGen=function()
 			type=computeTile(tile,tiles,TILE_WATER,'water')||type;
 			type=computeTile(tile,tiles,TILE_ENTRANCE,'entrance')||type;
 			type=computeTile(tile,tiles,TILE_EXIT,'exit')||type;
-
+			
 			this.data[me.x][me.y][2]=type.id;
 		}
 	}
-
-
+	
+	
 	this.Map.prototype.draw=function(size)
 	{
 		//return a string containing a rough visual representation of the map
@@ -814,7 +814,7 @@ var DungeonGen=function()
 		str='<div style="position:relative;width:'+(this.w*size)+'px;height:'+(this.h*size)+'px;background:#000;font-family:Courier;font-size:'+size+'px;float:left;margin:10px;">'+str+'</div>';
 		return str;
 	}
-
+	
 	this.Map.prototype.drawDetailed=function()
 	{
 		//return a string containing a rough visual representation of the map (with graphics)
@@ -839,7 +839,7 @@ var DungeonGen=function()
 		str='<div style="box-shadow:0px 0px 12px 6px #00061b;position:relative;width:'+(this.w*size)+'px;height:'+(this.h*size)+'px;background:#00061b;font-family:Courier;font-size:'+size+'px;float:left;margin:10px;">'+str+'</div>';
 		return str;
 	}
-
+	
 	this.Map.prototype.getStr=function()
 	{
 		//return a string containing the map with tile graphics, ready to be pasted in a wrapper
@@ -867,5 +867,5 @@ var DungeonGen=function()
 		}
 		return str;
 	}
-
+	
 }
